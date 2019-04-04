@@ -4,6 +4,7 @@ require 'active_support/core_ext/module/attribute_accessors.rb'
 require 'state_machines'
 require 'state_machines/integrations/base'
 require 'state_machines/integrations/active_model/version'
+require 'state_machines/integrations/active_model/locale'
 
 module StateMachines
   module Integrations #:nodoc:
@@ -468,19 +469,7 @@ module StateMachines
       # Initializes class-level extensions and defaults for this machine
       def after_initialize
         super()
-        load_locale
-      end
-
-      # Loads any locale files needed for translating validation errors
-      def load_locale
-        unless I18n.load_path.include?(locale_path)
-          I18n.load_path.unshift(locale_path)
-          I18n.reload!
-        end
-      end
-
-      def locale_path
-        "#{File.dirname(__FILE__)}/active_model/locale.rb"
+        Locale.load
       end
 
       # Skips defining reader/writer methods since this is done automatically
